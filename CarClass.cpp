@@ -112,6 +112,9 @@ int main() {
     assert(cars[0]->getId() != cars[1]->getId());
     assert(cars[1]->getId() != cars[2]->getId());
 
+    string expectedOutput = "ID: 1, Model: Toyota Corolla, Year: 2022, Weight: 1300 kg";
+    assert(cars[0]->toString() == expectedOutput);
+
     assert(Car::getObjectCount() == SIZE);
 
     cars[1]->setWeight(2200);
