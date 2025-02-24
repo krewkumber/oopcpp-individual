@@ -21,10 +21,10 @@ private:
     }
 
     void setYear(int y) {
-        if (y >= 1886 && y <= 2025) {
+        if (y >= 1886) {
             year = y;
         } else {
-            throw invalid_argument("Year must be between 1886 and 2025.");
+            throw invalid_argument("Year must be 1886 or greater");
         }
     }
 
@@ -86,7 +86,7 @@ public:
 
 
 int Car::objectCount = 0;
-int Car::nextId = 1;
+int Car::nextId = 0;
 
 int main() {
     cout << "Running Unit Tests...\n";
@@ -112,7 +112,7 @@ int main() {
     assert(cars[0]->getId() != cars[1]->getId());
     assert(cars[1]->getId() != cars[2]->getId());
 
-    string expectedOutput = "ID: 1, Model: Toyota Corolla, Year: 2022, Weight: 1300 kg";
+    string expectedOutput = "ID: 0, Model: Toyota Corolla, Year: 2022, Weight: 1300 kg";
     assert(cars[0]->toString() == expectedOutput);
 
     assert(Car::getObjectCount() == SIZE);
