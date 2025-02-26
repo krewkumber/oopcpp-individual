@@ -22,13 +22,24 @@ public:
     Car(string m, int y) {
         id = nextId++;
         objectCount++;
-        setModel(m);
-        setYear(y);
+        try {
+            setModel(m);
+            setYear(y);
+        } catch (...) {  
+            objectCount--; 
+            throw; 
+        }
     }
 
-    Car(string m, int y, int w) {
-        Car(m, y);
+    Car(string m, int y, int w) : Car(m, y) {
+        try {
         setWeight(w);
+        }
+
+        catch (...) {  
+        objectCount--; 
+        throw; 
+        }
     }
 
     ~Car() {
@@ -114,7 +125,7 @@ int main() {
     assert(cars[0]->getId() != cars[1]->getId());
     assert(cars[1]->getId() != cars[2]->getId());
 
-    string expectedOutput = "ID: 0, Model: Toyota Corolla, Year: 2022, Weight: 1300 kg";
+    string expectedOutput = "0,Toyota Corolla,2022,1300";
     assert(cars[0]->toString() == expectedOutput);
 
     assert(Car::getObjectCount() == SIZE);
@@ -126,19 +137,20 @@ int main() {
         cars[1]->setWeight(6000.0);  
         assert(false);  
     } catch (const invalid_argument& e) {
-        cout << "Caught invalid weight exception: " << e.what() << endl;
+        cout << "Caught invalid argument exception: " << e.what() << endl;
     }
 
     try {
         Car* invalidCar = new Car("Oldtimer", 1800, 1200);  
         assert(false);  
     } catch (const invalid_argument& e) {
-        cout << "Caught invalid year exception: " << e.what() << endl;
+        cout << "Caught invalid argument exception: " << e.what() << endl;
     }
+
 
     for (int i = SIZE - 1; i >= 0; i--) {
         delete cars[i];
-        assert(Car::getObjectCount() == SIZE - (SIZE - 1 - i)); 
+        assert(Car::getObjectCount() == SIZE - (SIZE - i)); 
     }
 
     assert(Car::getObjectCount() == 0);
