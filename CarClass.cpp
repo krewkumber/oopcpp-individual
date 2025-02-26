@@ -10,12 +10,32 @@ class Car {
 private:
     static int objectCount;
     static int nextId;
+    static int minWeight;
+    static int maxWeight;
 
     int id;
     string model;
     int year;
     int weight;
 
+public:
+    Car(string m, int y) {
+        id = nextId++;
+        objectCount++;
+        setModel(m);
+        setYear(y);
+    }
+
+    Car(string m, int y, int w) {
+        Car(m, y);
+        setWeight(w);
+    }
+
+    ~Car() {
+        objectCount--;
+    }
+
+private:
     void setModel(const string& m) {
         model = m;
     }
@@ -29,28 +49,8 @@ private:
     }
 
 public:
-    Car(string m, int y) {
-        id = nextId++;
-        objectCount++;
-        setModel(m);
-        setYear(y);
-    }
-
-    Car(string m, int y, int w) {
-        id = nextId++;
-        objectCount++;
-        setModel(m);
-        setYear(y);
-        setWeight(w);
-    }
-
-    ~Car() {
-        cout << "Car with ID " << id << " destroyed.\n";
-        objectCount--;
-    }
-
     void setWeight(int w) {
-        if (w >= 500 && w <= 5000) {
+        if (w >= minWeight && w <= maxWeight) {
             weight = w;
         } else {
             throw invalid_argument("Weight must be between 500 and 5000 kg.");
@@ -75,7 +75,7 @@ public:
 
     string toString() const {
         stringstream ss;
-        ss << "ID: " << id << ", Model: " << model << ", Year: " << year << ", Weight: " << weight << " kg";
+        ss << id << "," << model << "," << year << "," << weight;
         return ss.str();
     }
 
@@ -87,6 +87,8 @@ public:
 
 int Car::objectCount = 0;
 int Car::nextId = 0;
+int Car::minWeight = 500;
+int Car::maxWeight = 5000;
 
 int main() {
     cout << "Running Unit Tests...\n";
@@ -138,6 +140,8 @@ int main() {
         delete cars[i];
         assert(Car::getObjectCount() == SIZE - (SIZE - 1 - i)); 
     }
+
+    assert(Car::getObjectCount() == 0);
 
     cout << "All Unit Tests Passed!\n";
 
