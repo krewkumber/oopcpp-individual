@@ -84,7 +84,7 @@ public:
         return id;
     }
 
-    string toString() const {
+    string to_string() const {
         stringstream ss;
         ss << id << "," << model << "," << year << "," << weight;
         return ss.str();
@@ -126,7 +126,7 @@ int main() {
     assert(cars[1]->getId() != cars[2]->getId());
 
     string expectedOutput = "0,Toyota Corolla,2022,1300";
-    assert(cars[0]->toString() == expectedOutput);
+    assert(cars[0]->to_string() == expectedOutput);
 
     assert(Car::getObjectCount() == SIZE);
 
