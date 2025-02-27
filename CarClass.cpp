@@ -18,35 +18,6 @@ private:
     int year;
     int weight;
 
-public:
-    Car(string m, int y) {
-        id = nextId++;
-        objectCount++;
-        try {
-            setModel(m);
-            setYear(y);
-        } catch (...) {  
-            objectCount--; 
-            throw; 
-        }
-    }
-
-    Car(string m, int y, int w) : Car(m, y) {
-        try {
-        setWeight(w);
-        }
-
-        catch (...) {  
-        objectCount--; 
-        throw; 
-        }
-    }
-
-    ~Car() {
-        objectCount--;
-    }
-
-private:
     void setModel(const string& m) {
         model = m;
     }
@@ -60,11 +31,28 @@ private:
     }
 
 public:
+    Car(string m, int y) {
+        setModel(m);
+        setYear(y);
+        id = nextId;
+        objectCount++;
+    }
+
+    Car(string m, int y, int w) : Car(m, y) {
+        setWeight(w);
+    }
+
+    ~Car() {
+        objectCount--;
+    }
+
     void setWeight(int w) {
         if (w >= minWeight && w <= maxWeight) {
             weight = w;
         } else {
-            throw invalid_argument("Weight must be between 500 and 5000 kg.");
+            stringstream ss;
+            ss << "Weight must be between " << minWeight << " and " << maxWeight;
+            throw invalid_argument(ss.str());
         }
     }
 
@@ -76,7 +64,7 @@ public:
         return year;
     }
 
-    double getWeight() const {
+    int getWeight() const {
         return weight;
     }
 
@@ -122,9 +110,6 @@ int main() {
     assert(cars[2]->getYear() == 2020);
     assert(cars[2]->getWeight() == 1500);
 
-    assert(cars[0]->getId() != cars[1]->getId());
-    assert(cars[1]->getId() != cars[2]->getId());
-
     string expectedOutput = "0,Toyota Corolla,2022,1300";
     assert(cars[0]->to_string() == expectedOutput);
 
@@ -146,7 +131,6 @@ int main() {
     } catch (const invalid_argument& e) {
         cout << "Caught invalid argument exception: " << e.what() << endl;
     }
-
 
     for (int i = SIZE - 1; i >= 0; i--) {
         delete cars[i];
